@@ -57,7 +57,7 @@
       "parcoord-es": "^2.2.10",
       "prettier": "^2.3.0",
       "release-it": "^14.6.2",
-      "rollup": "^2.47.0",
+      "rollup": "^2.52.2",
       "rollup-plugin-livereload": "^2.0.0",
       "rollup-plugin-local-resolve": "^1.0.7",
       "rollup-plugin-serve": "^1.1.0",

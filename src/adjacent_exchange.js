@@ -42,6 +42,27 @@ function count_out_crossings(graph, v, w, inv) {
   return cross;
 }
 
+function count_all_in_crossings(graph,a,b,layer){
+    if(!Array.isArray(graph)){
+        return count_in_crossings(graph, a, b, layer);
+    }
+    let sum = 0;
+    for(let i = 0; i<graph.length; i++){
+        sum += count_in_crossings(graph[i],a,b,layer);
+    }
+    return sum;
+}
+function count_all_out_crossings(graph,a,b,layer){
+    if(!Array.isArray(graph)){
+        return count_out_crossings(graph,a,b,layer);
+    }
+    let sum = 0;
+    for(let i = 0; i<graph.length; i++){
+        sum += count_out_crossings(graph[i],a,b,layer);
+    }
+    return sum;
+}
+
 /**
  * Optimize two layers by swapping adjacent nodes when
  * it reduces the number of crossings.
@@ -63,10 +84,8 @@ export function adjacent_exchange(graph, layer1, layer2) {
     for (let i = 0; i < layer1.length - 1; i++) {
       const v = layer1[i];
       const w = layer1[i + 1];
-      // should reduce the in crossing and the out crossing
-      // otherwise what we gain horizontally is lost vertically
-      const c0 = count_out_crossings(graph, v, w, inv_layer2);
-      const c1 = count_out_crossings(graph, w, v, inv_layer2);
+      const c0 = count_all_out_crossings(graph, v, w, inv_layer2);
+      const c1 = count_all_out_crossings(graph, w, v, inv_layer2);
       if (c0 > c1) {
         layer1[i] = w;
         layer1[i + 1] = v;
@@ -79,8 +98,8 @@ export function adjacent_exchange(graph, layer1, layer2) {
     for (let i = 0; i < layer2.length - 1; i++) {
       const v = layer2[i];
       const w = layer2[i + 1];
-      const c0 = count_in_crossings(graph, v, w, inv_layer1);
-      const c1 = count_in_crossings(graph, w, v, inv_layer1);
+      const c0 = count_all_in_crossings(graph, v, w, inv_layer1);
+      const c1 = count_all_in_crossings(graph, w, v, inv_layer1);
       if (c0 > c1) {
         layer2[i] = w;
         layer2[i + 1] = v;

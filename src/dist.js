@@ -3,24 +3,74 @@ import { distance as distances } from './distance';
 export function dist() {
   let distance = distances.euclidean;
 
-  function dist(vectors) {
+  function dist(vectors,square) {
     const n = vectors.length;
-    const distMatrix = [];
 
-    for (let i = 0; i < n; i++) {
-      const d = [];
-      distMatrix[i] = d;
-      for (let j = 0; j < n; j++) {
-        if (j < i) {
-          d.push(distMatrix[j][i]);
-        } else if (i === j) {
-          d.push(0);
-        } else {
-          d.push(distance(vectors[i], vectors[j]));
+    if(!Array.isArray(vectors[0][0])){
+        const res = [];
+        for (let i = 0; i < n; i++) {
+            const d = [];
+            res[i] = d;
+            for (let j = 0; j < n; j++) {
+              if (j < i) {
+                d[j] = (res[j][i]);
+              } else if (i === j) {
+                d[j] = 0;
+              } else {
+                if(square){
+                    d[j] = distance(vectors[i], vectors[j]) * distance(vectors[i], vectors[j]);
+                }
+                else{
+                    d[j] = distance(vectors[i], vectors[j]);
+                }
+              }
+            }
         }
-      }
+        return res;
     }
-    return distMatrix;
+    else{
+        var res = [];
+        console.log(res);
+        for (var i = 0; i < vectors[0].length; i++) {
+            var newrow = [];
+            for (var j = 0; j < vectors[0][0].length; j++) {
+                newrow.push(0);
+            }
+            res.push(newrow);
+        }
+        for (let k = 0; k < n; k++){
+            var distMatrix = [];
+            console.log("Timestep: " + k);
+            const vector = vectors[k];
+            const n1 = vector.length;
+            for (let i = 0; i < n1; i++) {
+                const d = [];
+                distMatrix[i] = d;
+                for (let j = 0; j < n1; j++) {
+                  if (j < i) {
+                    d[j] = (distMatrix[j][i]);
+                  } else if (i === j) {
+                    d[j] = 0;
+                  } else {
+                    d[j] = distance(vector[i], vector[j]);
+                  }
+                }
+            }
+            for (var i = 0; i < distMatrix.length; i++) {
+                for (var j = 0; j <distMatrix[0].length; j++) {
+                    res[i][j] += distMatrix[i][j];
+                    if(square){
+                        res[i][j] += distMatrix[i][j] * distMatrix[i][j];
+                    }
+                    else{
+                        res[i][j] += distMatrix[i][j];
+                    }
+                }
+                
+            }
+        }
+    }
+    return res;
   }
 
   dist.distance = function (x) {
