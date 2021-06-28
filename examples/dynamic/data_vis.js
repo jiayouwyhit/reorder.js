@@ -6,7 +6,7 @@ var margin = {top: 30, right: 0, bottom: 10, left: 30},
     width = 800 - margin.left - margin.right,
     height = 800 - margin.top - margin.bottom;
 
-function load_vis(matrices, col_labels, row_labels, tables){
+function load_vis(callback){
 
 d3.csv("IEEE VIS papers 1990-2020.csv", function(err,data) {
     var map = {};
@@ -45,8 +45,6 @@ d3.csv("IEEE VIS papers 1990-2020.csv", function(err,data) {
                 }
             }
    }
-   
-
     const ordered = Object.keys(map).sort().reduce(
       (obj, key) => { 
         obj[key] = map[key]; 
@@ -86,6 +84,7 @@ d3.csv("IEEE VIS papers 1990-2020.csv", function(err,data) {
            }
        }
    }
+  
    var tables_vis = [];
     for(let i = 0; i<matrices_vis.length; i++){
      var svg = d3.select("#heatmap").append("svg")
@@ -96,10 +95,9 @@ d3.csv("IEEE VIS papers 1990-2020.csv", function(err,data) {
      var t1 = new table({matrix: matrices_vis[i], row_labels_vis: row_labels_vis, col_labels_vis: col_labels_vis},svg);
      tables_vis[i] = t1;
     }
-    matrices = matrices_vis;
-    col_labels = col_labels_vis;
-    row_labels = row_labels_vis;
-    tables = tables_vis;
+    
+    callback(matrices_vis, col_labels_vis, row_labels_vis, tables_vis);
+    
 });
 
 

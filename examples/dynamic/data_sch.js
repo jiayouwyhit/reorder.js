@@ -6,7 +6,7 @@ var margin = {top: 30, right: 0, bottom: 10, left: 30},
     width = 800 - margin.left - margin.right,
     height = 800 - margin.top - margin.bottom;
 
-function load_sch(matrices, col_labels, row_labels, tables){
+function load_sch(callback){
 
 d3.csv("primaryschool.csv", function(err,data) {
     var indices = {};
@@ -58,9 +58,7 @@ d3.csv("primaryschool.csv", function(err,data) {
      var t1 = new table({matrix: matrices_sch[i], row_labels_sch: row_labels_sch, col_labels_sch: col_labels_sch},svg);
      tables_sch[i] = t1;
     }
-    matrices = matrices_sch;
-    col_labels = col_labels_sch;
-    row_labels = row_labels_sch;
-    tables = tables_sch;
+    
+    callback(matrices_sch, col_labels_sch, row_labels_sch, tables_sch);
 });
 }

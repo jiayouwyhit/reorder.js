@@ -13,7 +13,7 @@ var margin = {top: 30, right: 0, bottom: 10, left: 30},
     width = 800 - margin.left - margin.right,
     height = 800 - margin.top - margin.bottom;
 
-function load_survey(matrices, col_labels, row_labels, tables){
+function load_survey(callback){
 
 // WatzStrogast
 matrices_survey[0] =  [[0,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
@@ -460,8 +460,6 @@ matrices_survey[3] = [[0,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
         var t1 = new table({matrix: matrices_survey[i], row_labels_survey: labels, col_labels_survey: labels},svg);
         tables_survey[i] = t1;
     }
-    matrices = matrices_survey;
-    col_labels = col_labels_survey;
-    row_labels = row_labels_survey;
-    tables = tables_survey;
+    
+    callback(matrices_survey, col_labels_survey, row_labels_survey, tables_survey);
 }

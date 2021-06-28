@@ -5,7 +5,7 @@ var row_labels_example = [];
 var margin = {top: 30, right: 0, bottom: 10, left: 30},
     width = 800 - margin.left - margin.right,
     height = 800 - margin.top - margin.bottom;
-function load_example(matrices, col_labels, row_labels, tables){
+function load_example(callback){
 
 matrices_example = [
   [
@@ -43,8 +43,6 @@ matrices_example = [
         var t1 = new table({matrix: matrices_example[i], row_labels_example: labels, col_labels_example: labels},svg);
         tables_example[i] = t1;
     }
-    matrices = matrices_example;
-    col_labels = col_labels_example;
-    row_labels = row_labels_example;
-    tables = tables_example;
+    
+    callback(matrices_example, col_labels_example, row_labels_example, tables_example);
 }

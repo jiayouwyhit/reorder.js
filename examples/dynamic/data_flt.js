@@ -53,7 +53,6 @@ d3.json(filename, function(err,data){
     tables_flt[i] = t1;
     }
     
-    console.log(matrices_flt);
     callback(matrices_flt, col_labels_flt, row_labels_flt, tables_flt);
 }); 
 }
