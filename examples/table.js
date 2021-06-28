@@ -133,7 +133,6 @@ class table{
     computeMorans(permuted){
         // Moran's i
         var N = this.row_perm.length * this.col_perm.length;
-//        var W = (this.row_perm.length-2) * (this.col_perm.length-2) * 8 + (this.row_perm.length-2) * 5 * 2 + (this.col_perm.length-2) * 5 * 2 + 12;
         var W = (this.row_perm.length-2) * (this.col_perm.length-2) * 4 + (this.row_perm.length-2) * 3 * 2 + (this.col_perm.length-2) * 3 * 2 + 8;
         
         
@@ -143,7 +142,6 @@ class table{
                 meank += permuted[i][j];
             }
         }
-//        mean = mean / N;
         var num = 0, denom = 0;
         for (var j = 0; j < permuted.length; j++) {
             for (var i = 0; i < permuted[0].length; i++) {
@@ -169,12 +167,6 @@ class table{
                 num += innersum;
             }
         }
-        
-//        console.log("Morans log");
-//        console.log(N);
-//        console.log(W);
-//        console.log(num);
-//        console.log(denom);
         if(num === 0 && denom === 0){
             return[1,num];
         }
@@ -215,7 +207,6 @@ class table{
         
         var bandwidth = 0;
         var linarr = 0;
-//        console.log(this.matrix);
         for(var i=0 ; i< this.row_perm.length; i++){
             for(var j=0 ; j<this.col_perm.length ; j++){
                 if(i!==j && this.matrix[i][j] === 1){
@@ -286,94 +277,5 @@ class table{
         return [bandwidth,profile,linarr,moran,bbadjacencies,bwadjacencies,wwadjacencies];
     }
     
-    
-    
-    checkMoran(){
-        var permuted = [];
-        var permuted1 = [];
-        var permuted2 = [];
-        for (var i = 0; i < this.row_perm.length; i++) {
-            permuted.push([]);
-            permuted1.push([]);
-            permuted2.push([]);
-            for (var j = 0; j < this.col_perm.length; j++) {
-                permuted[i].push(this.matrix[this.row_perm[i]][this.col_perm[j]]);
-                permuted1[i].push(this.matrix[this.row_perm[i]][this.row_perm[j]]);
-                permuted2[i].push(this.matrix[this.col_perm[i]][this.col_perm[j]]);
-            }
-        }
-        
-          var moran = this.computeMorans(permuted)[1];
-          var moran1 = this.computeMorans(permuted1)[1];
-          var moran2 = this.computeMorans(permuted2)[1];
-          
-//        var moran = (N/W) * (num/denom);
-//        moran = Math.round(moran * 100000000) / 100000000;
-//        var moran1 = (N/W) * (num1/denom1);
-//        moran1 = Math.round(moran1 * 100000000) / 100000000;
-//        var moran2 = (N/W) * (num2/denom2);
-//        moran2 = Math.round(moran2 * 100000000) / 100000000;
-        
-        if(moran > moran1 && moran > moran2){
-            console.log("!!--- Found faulty Matrix ---!!");
-            console.log("Scores: " + moran + ", " + moran1 + ", " + moran2);
-            console.log(permuted);
-            console.log(permuted1);
-            console.log(permuted2);
-            
-        }
-        
-        
-        
-    }
-    
-    computeMoransRows(rows){
-        var permuted = [];
-        for (var i = 0; i < rows.length; i++) {
-            permuted.push([]);
-            for (var j = 0; j < rows.length; j++) {
-                permuted[i].push(this.matrix[rows[i]][rows[j]]);
-            }
-        }
-        // Moran's i
-        var N = rows.length * rows.length;
-//        var W = (this.row_perm.length-2) * (this.col_perm.length-2) * 8 + (this.row_perm.length-2) * 5 * 2 + (this.col_perm.length-2) * 5 * 2 + 12;
-        var W = (rows.length-2) * (rows.length-2) * 4 + (rows.length-2) * 3 * 2 + (rows.length-2) * 3 * 2 + 8;
-        
-        
-        var meank = 0;
-        for (var i = 0; i < permuted.length; i++) {
-            for (var j = 0; j < permuted[0].length; j++) {
-                meank += permuted[i][j];
-            }
-        }
-//        mean = mean / N;
-        var num = 0, denom = 0;
-        for (var j = 0; j < permuted.length; j++) {
-            for (var i = 0; i < permuted[0].length; i++) {
-                denom += Math.pow(permuted[j][i] - meank/N, 2);
-                var innersum = 0;
-                for (var y = Math.max(0,j-1); y < Math.min(permuted.length,j+2); y++) {
-                    for (var x = Math.max(0,i-1); x < Math.min(permuted[0].length,i+2); x++) {
-                        if(y !== j || x !== i){
-                            // Counting Diagonal Neighbours
-//                            if(i - x >= -1 && i - x <= 1 && y - j >= -1 && y - j <= 1){
-//                                innersum += (permuted[j][i] * N - meank) * (permuted[y][x] * N - meank);
-//                            }
-                            // Not Counting Diagonal Neighbours
-                            if(i - x >= -1 && i - x <= 1 && j === y){
-                                innersum += (permuted[j][i] * N - meank) * (permuted[y][x] * N - meank);
-                            }
-                            if(i === x && j - y >= -1 && j - y <= 1){
-                                innersum += (permuted[j][i] * N - meank) * (permuted[y][x] * N - meank);
-                            }
-                        }
-                    }
-                }
-                num += innersum;
-            }
-        }
-        return ((N/W) * (num/denom))/(N*N);
-    }
 }
 

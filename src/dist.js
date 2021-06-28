@@ -30,7 +30,6 @@ export function dist() {
     }
     else{
         var res = [];
-        console.log(res);
         for (var i = 0; i < vectors[0].length; i++) {
             var newrow = [];
             for (var j = 0; j < vectors[0][0].length; j++) {
@@ -40,7 +39,6 @@ export function dist() {
         }
         for (let k = 0; k < n; k++){
             var distMatrix = [];
-            console.log("Timestep: " + k);
             const vector = vectors[k];
             const n1 = vector.length;
             for (let i = 0; i < n1; i++) {

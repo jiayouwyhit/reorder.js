@@ -128,9 +128,6 @@ function initial_order_permute(t,str) {
 function random_permute(t,str) {
       var r1 = reorder.randomPermutation(matrices[0].length),
           r2 = reorder.randomPermutation(matrices[0][0].length);
-      console.log(t.length);
-      console.log(tables.length);
-      console.log(matrices.length);
       for(let i = 0; i<tables.length; i++){
         t[i].order(r1,r2);
         t[i].checkMoran()
@@ -192,7 +189,6 @@ function max_mi_gx(t,str) {
         }
         var oldm = 0;
         var newm = t[0].quality()[3];
-        console.log("improving");
         while(newm-oldm > 0.0001){
             for (var i = 0; i < res.length; i++) {
                 for (var j = i+2; j < res.length-1; j++) {
@@ -261,8 +257,6 @@ function union_l2_leaf_order_permute(t,str,square) {
   var transpose = reorder.transpose(pile),
       dist_rows = reorder.dist()(pile,square),
       dist_cols = reorder.dist()(transpose);
-      console.log("Distances: ");
-      console.log(dist_rows);
       var
       order = reorder.optimal_leaf_order();
       var row_perm = order.distanceMatrix(dist_rows)(matrices[0]);
@@ -420,15 +414,9 @@ function simultaneous_l2_leaf_order_permute(t,str,square) {
       transposed[i] = reorder.transpose(matrices[i]);
     }
     var dist_rows = reorder.dist()(matrices,square);
-//      dist_cols = reorder.dist()(transposed);
-    console.log("Distances: ");
-    console.log(dist_rows);
     var
     order = reorder.optimal_leaf_order();
-    console.log("Computing..");
     var row_perm = order.distanceMatrix(dist_rows)(matrices[0]);
-//      col_perm = order.distanceMatrix(dist_cols)(transposed[0]);
-      console.log("Ordering..");
     
     var end = new Date().getTime();
     var time = end - start;
@@ -521,8 +509,6 @@ function gx_barycenter_permute(t,str) {
 	  .nodes(nodes)
 	  .links(links)
 	  .init();
-        console.log("edge");
-        console.log(graph.outEdges(0));
         order = reorder.barycenter_order(graph);
         improved = reorder.adjacent_exchange(graph,
 						 order[0],
@@ -614,9 +600,7 @@ function simultaneous_barycenter_permute(t,str) {
               .init();
             graphs[k] = graph;
         }
-        console.log(graphs);
         var order = reorder.barycenter_order(graphs);
-        console.log(order);
         var improved = reorder.adjacent_exchange(graphs,
 						 order[0],
 						 order[1]);

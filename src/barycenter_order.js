@@ -89,7 +89,6 @@ export function barycenter(graph, comp, max_iter,timesteps) {
       return [comp,comp,0];
   }
   
-  console.log(comp);
   
   if (comp.length < 3) {
     return [layer1, layer2, count_all_crossings(graph, layer1, layer2,timesteps)];
