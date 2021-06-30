@@ -24,16 +24,16 @@ line {
     </script>
   </head>
   <body>
-    <div style="float:left; width:50%">
+    <div style="float:left">
         <label for="dataset">Choose a dataset:</label>
         <select name="dataset" id="dataset" onChange="updateData()">
             <option value="flt">FLT</option>
           <option value="sch">SCH</option>
           <option value="vis">VIS</option>
-          <option value="survey">Behrisch examples</option>
-          <option value="example">Our examples</option>
+          <option value="survey">Behrisch etal survey (2016) matrices</option>
+          <option value="example">Our constructed example</option>
         </select>
-        <label for="dataset">Choose x (timestep):</label>
+        <label for="timestep">Choose x (timestep):</label>
         <input type="number" id="timestep" name="timestep" min="1" max="100" value="1">
         <label id="loading"></label>
         <div style="margin-top:4px;margin-bottom: 4px">
@@ -43,12 +43,14 @@ line {
         
         </div>
         <div style="margin-top:4px;margin-bottom: 4px">
-        <button type="button" onclick="gx_l2_leaf_order_permute(tables,'quality')">Leaf Order Permute on Graph Gx Euclidean distance</button>
-        <button type="button" onclick="gx_morans_leaf_order_permute(tables,'quality')">Leaf Order Permute on Graph Gx Morans distance</button>
-        <button type="button" onclick="union_l2_leaf_order_permute(tables,'quality')">Union Leaf Order Permute Euclidean distance</button>
-        <button type="button" onclick="union_morans_leaf_order_permute(tables,'quality')">Union Leaf Order Permute Moran's distance</button>
-        <button type="button" onclick="simultaneous_l2_leaf_order_permute(tables,'quality')">Simultaneous Leaf Order Permute Euclidean distance</button>
-        <button type="button" onclick="simultaneous_morans_leaf_order_permute(tables,'quality')">Simultaneous Leaf Order Permute Moran's distance</button>
+        <button type="button" onclick="gx_l2_leaf_order_permute(tables,'quality',document.getElementById('square').checked)">Leaf Order Permute on Graph Gx (Euclidean distance)</button>
+        <button type="button" onclick="gx_morans_leaf_order_permute(tables,'quality',document.getElementById('square').checked)">Leaf Order Permute on Graph Gx (Morans distance)</button>
+        <button type="button" onclick="union_l2_leaf_order_permute(tables,'quality',document.getElementById('square').checked)">Union Leaf Order Permute (Euclidean distance)</button>
+        <button type="button" onclick="union_morans_leaf_order_permute(tables,'quality',document.getElementById('square').checked)">Union Leaf Order Permute (Moran's distance)</button>
+        </div><div>
+        <button type="button" onclick="simultaneous_l2_leaf_order_permute(tables,'quality',document.getElementById('square').checked)">Simultaneous Leaf Order Permute (Euclidean distance)</button>
+        <button type="button" onclick="simultaneous_morans_leaf_order_permute(tables,'quality',document.getElementById('square').checked)">Simultaneous Leaf Order Permute (Moran's distance)</button>
+        <label for="square">Square distances</label><input type="checkbox" id="square" name="square" value="square">
         </div>
         <div style="margin-top:4px;margin-bottom: 4px">
         <button type="button" onclick="gx_barycenter_permute(tables,'quality')">Barycenter Permute on Graph Gx</button>
