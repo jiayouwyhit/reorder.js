@@ -131,8 +131,7 @@ function random_permute(t,str) {
       var r1 = reorder.randomPermutation(matrices[0].length),
           r2 = reorder.randomPermutation(matrices[0][0].length);
       for(let i = 0; i<tables.length; i++){
-        t[i].order(r1,r2);
-        t[i].checkMoran()
+        t[i].order(r1,r1);
       }
       computeQualities(t,str);
 }

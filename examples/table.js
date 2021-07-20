@@ -114,7 +114,7 @@ class table{
 	this.col_perm = cols;
 	this.col_inv = reorder.inverse_permutation(this.col_perm);
 	
-	var t = this.svg.transition().duration(0);
+	var t = this.svg.transition().duration(1000);
         var w = this.w,
             h = this.h,
             col_inv = this.col_inv,
