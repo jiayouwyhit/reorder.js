@@ -19,6 +19,7 @@ line {
     <script src="data_flt.js"></script>
     <script src="data_survey.js"></script>
     <script src="data_example.js"></script>
+    <script src="data_videoteaser.js"></script>
     <script>
         var tables = [];
     </script>
@@ -32,6 +33,7 @@ line {
           <option value="vis">VIS</option>
           <option value="survey">Behrisch etal survey (2016) matrices</option>
           <option value="example">Our constructed example</option>
+          <option value="videoteaser">Teaser from video</option>
         </select>
         <label for="timestep">Choose x (timestep):</label>
         <input type="number" id="timestep" name="timestep" min="1" max="100" value="1">
@@ -96,6 +98,9 @@ function updateData(){
     }
     if(dataset === "example"){ 
        load_example((a, b, c, d) => {matrices = a; col_labels = b; row_labels = c; tables = d;});
+    }
+    if(dataset === "videoteaser"){ 
+       load_videoteaser((a, b, c, d) => {matrices = a; col_labels = b; row_labels = c; tables = d;});
     }
 }
 
