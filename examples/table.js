@@ -76,6 +76,14 @@ class table{
 	.attr("dy", ".32em")
 	.attr("text-anchor", "end")
 	.text(function(d, i) { return row_labels[i]; });
+//    row.append("rect")
+//    	.attr("x", -30)
+//	.attr("y", -30)
+//	.attr("width", 100)
+//        .attr("heigth", 100)
+//        .attr("stroke", "black")
+//	.attr("fill", "blue");
+    
 
     var col = this.svg.selectAll(".col")
 	    .data(this.matrix[0])
@@ -90,10 +98,10 @@ class table{
 
     var col_labels = this.col_labels;
     col.append("text")
-	.attr("x", 12)
-	.attr("y", w / 2 - 26)
+	.attr("x", h/2)
+	.attr("y", -10)
 	.attr("dy", ".32em")
-	.attr("text-anchor", "start")
+	.attr("text-anchor", "middle")
         .attr("transform", "rotate(90)")
 	.text(function(d, i) { return col_labels[i]; });
 
@@ -106,7 +114,7 @@ class table{
    
 }
     
-    order(rows, cols) {
+    order(rows, cols, prev_order) {
         var x = function(i){ return this.w*this.col_inv[i]; },
             y = function(i){ return this.h*this.row_inv[i]; };
 	this.row_perm = rows;
@@ -128,6 +136,17 @@ class table{
 	t.selectAll(".col")
             .attr("transform", function(d, i) {
 		return "translate(" + w*col_inv[i] + ")rotate(-90)"; });
+        if(prev_order){
+            
+        }
+    }
+    
+    highlight_left(){
+        
+    }
+    
+    highlight_right(){
+        
     }
     
     computeMorans(permuted){

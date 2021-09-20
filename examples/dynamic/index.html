@@ -39,7 +39,7 @@ line {
         <input type="number" id="timestep" name="timestep" min="1" max="100" value="1">
         <label id="loading"></label>
         <div style="margin-top:4px;margin-bottom: 4px">
-        <button type="button" onclick="random_permute(tables,'quality')">Random Order</button>
+        <button type="button" onclick="print_all(tables,'quality')">Random Order</button>
         <button type="button" onclick="initial_order_permute(tables,'quality')">Initial Order</button>
         <button type="button" onclick="max_mi_gx(tables,'quality')">Optimize Moran's I (NN-2OPT) on Graph Gx</button>
         
@@ -60,7 +60,8 @@ line {
         <button type="button" onclick="simultaneous_barycenter_permute(tables,'quality')">Simultaneous Barycenter Permute</button>
         </div>
     </div>
-    <div style='float:left;margin-right: 20px' id='heatmap'></div>
+    <div style='float:left;margin-right: 20px;overflow:auto;white-space:nowrap' id='heatmap'></div>
+    
     <div style='float:left;margin-right: 20px'>
     <p>Quality of matrices:</p>
     <div style='float:left;margin-right: 20px' id='qualitymean'></div>
@@ -76,8 +77,8 @@ var col_labels;
 var row_labels;
 
 var margin = {top: 30, right: 0, bottom: 10, left: 30},
-    width = 800 - margin.left - margin.right,
-    height = 800 - margin.top - margin.bottom;
+    width = 500 - margin.left - margin.right,
+    height = 500 - margin.top - margin.bottom;
 
 updateData();
 
@@ -621,6 +622,16 @@ function simultaneous_barycenter_permute(t,str) {
     return computeQualities(t,str,time);
 }
 
+function print_all(tables){
+    let output = "";
+    for (var i = 0; i < tables.length; i++) {
+        if(i === 0 || i === 47 || i === 95){
+            output += tables[i].print();
+            output += "\n";
+        }
+    }
+    console.log(output);
+}
 
       
     </script>
