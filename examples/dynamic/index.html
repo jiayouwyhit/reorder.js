@@ -189,10 +189,10 @@ function max_mi_gx(t,str) {
           }
           res.push(nearest);
         }
-    
         for(let i = 0; i<tables.length; i++){
           t[i].order(res, res);
         }
+        best_order = res;
         var oldm = 0;
         var newm = t[0].quality()[3];
         while(newm-oldm > 0.0001){
