@@ -70,18 +70,32 @@ class table{
         .style("stroke", colorGrid);
 
     var row_labels = this.row_labels;
-    row.append("text")
-	.attr("x", -6)
-	.attr("y", h / 2)
-	.attr("dy", ".32em")
-	.attr("text-anchor", "end")
-	.text(function(d, i) { return row_labels[i]; });
+//    row.append("text")
+//	.attr("x", -6)
+//	.attr("y", h / 2)
+//	.attr("dy", ".32em")
+//	.attr("text-anchor", "end")
+//	.text(function(d, i) { return row_labels[i]; });
+    row.append("rect")
+	.attr("x", -10)
+	.attr("y", 0)
+	.attr('width', 10)
+        .attr('height', h)
+        .attr('stroke', 'black')
+        .attr('fill', '#69a3b2');
+    row.append("rect")
+            .attr("x", w*row_labels.length)
+            .attr("y", 0)
+            .attr('width', 15)
+            .attr('height', h)
+            .attr('stroke', 'black')
+            .attr('fill', '#69a3b2');
 //    row.append("rect")
 //    	.attr("x", -30)
 //	.attr("y", -30)
 //	.attr("width", 100)
-//        .attr("heigth", 100)
-//        .attr("stroke", "black")
+//      .attr("heigth", 100)
+//      .attr("stroke", "black")
 //	.attr("fill", "blue");
     
 
