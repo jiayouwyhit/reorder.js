@@ -10,6 +10,8 @@ class table{
         this.col_inv;
 	this.n = this.matrix.length;
 	this.m = this.matrix[0].length;
+        this.left_colors;
+        this.right_colors;
         
     if (! this.row_labels) {
 	this.row_labels = Array(this.n);
@@ -29,6 +31,9 @@ class table{
     if (! this.col_perm)
 	this.col_perm = reorder.permutation(this.m);
     this.col_inv = reorder.inverse_permutation(this.col_perm);
+
+    this.left_colors = Array(this.row_perm.length).fill("red");
+    this.right_colors = Array(this.row_perm.length).fill("blue");
 
     var colorLow = 'white', colorHigh = 'black', colorGrid = 'grey';
     var max_value = d3.max(this.matrix.map(function(row) { return d3.max(row); })),
@@ -76,27 +81,22 @@ class table{
 //	.attr("dy", ".32em")
 //	.attr("text-anchor", "end")
 //	.text(function(d, i) { return row_labels[i]; });
+    var left_colors = this.left_colors;
+    var right_colors = this.right_colors;
     row.append("rect")
+        .attr("id","left")
 	.attr("x", -10)
-	.attr("y", 0)
+	.attr("y", -.5)
 	.attr('width', 10)
-        .attr('height', h)
-        .attr('stroke', 'black')
-        .attr('fill', '#69a3b2');
+        .attr('height', h+1)
+        .attr('fill', function(d, i) { return left_colors[i]; });
     row.append("rect")
+            .attr("id","right")
             .attr("x", w*row_labels.length)
-            .attr("y", 0)
-            .attr('width', 15)
-            .attr('height', h)
-            .attr('stroke', 'black')
-            .attr('fill', '#69a3b2');
-//    row.append("rect")
-//    	.attr("x", -30)
-//	.attr("y", -30)
-//	.attr("width", 100)
-//      .attr("heigth", 100)
-//      .attr("stroke", "black")
-//	.attr("fill", "blue");
+            .attr("y", -.5)
+            .attr('width', 10)
+            .attr('height', h+1)
+            .attr('fill', function(d, i) { return right_colors[i]; });
     
 
     var col = this.svg.selectAll(".col")
@@ -128,7 +128,7 @@ class table{
    
 }
     
-    order(rows, cols, prev_order) {
+    order(rows, cols) {
         var x = function(i){ return this.w*this.col_inv[i]; },
             y = function(i){ return this.h*this.row_inv[i]; };
 	this.row_perm = rows;
@@ -150,17 +150,6 @@ class table{
 	t.selectAll(".col")
             .attr("transform", function(d, i) {
 		return "translate(" + w*col_inv[i] + ")rotate(-90)"; });
-        if(prev_order){
-            
-        }
-    }
-    
-    highlight_left(){
-        
-    }
-    
-    highlight_right(){
-        
     }
     
     computeMorans(permuted){
@@ -226,6 +215,33 @@ class table{
             }
         }
         return res;
+    }
+    
+    highlight_order(nexttable){
+        if(!nexttable){
+            return
+        }
+        var colors = ['#e6194B', '#3cb44b', '#ffe119', '#4363d8', '#f58231', '#911eb4', 
+            '#42d4f4', '#f032e6', '#bfef45', '#fabed4', '#469990', '#dcbeff', '#9A6324', 
+            '#fffac8', '#800000', '#aaffc3', '#808000', '#ffd8b1', '#000075'];
+        var colorIndex = 0;
+        var lastRight = 0;
+        for (var left = 0; left < this.row_perm.length; left++){
+            for (var right = 0; right < nexttable.row_perm.length; right++){
+                if(this.row_perm[left] === nexttable.row_perm[right]){
+                    // If we are in a different block, change the color
+                    if(lastRight !== right+1){
+                        colorIndex++;
+                    }
+                    this.right_colors[left] = colors[colorIndex];
+                    nexttable.left_colors[right] = colors[colorIndex];
+                    
+                    lastRight = right;
+                    right = nexttable.row_perm.length;
+                }
+            }
+        }
+        
     }
     
     quality(){
