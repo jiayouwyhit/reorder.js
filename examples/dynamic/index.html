@@ -59,6 +59,9 @@ line {
         <button type="button" onclick="union_barycenter_permute(tables,'quality')">Union Barycenter Permute</button>
         <button type="button" onclick="simultaneous_barycenter_permute(tables,'quality')">Simultaneous Barycenter Permute</button>
         </div>
+        <div style="margin-top:4px;margin-bottom: 4px">
+        <button type="button" onclick="stable_split_LO(tables,'quality')">Stable Split</button>
+        </div>
     </div>
     <div style='float:left;margin-right: 20px;overflow:auto;white-space:nowrap' id='heatmap'></div>
     
@@ -127,7 +130,7 @@ function computeQualities(t,str,time){
 function initial_order_permute(t,str) {
       var row_perm = reorder.permutation(matrices[0].length),
           col_perm = reorder.permutation(matrices[0][0].length);
-      for(let i = 0; i<tables.length; i++){
+      for(let i = 0; i<t.length; i++){
         t[i].order(row_perm, col_perm);
       }
       computeQualities(t,str);
@@ -136,7 +139,7 @@ function initial_order_permute(t,str) {
 function random_permute(t,str) {
       var r1 = reorder.randomPermutation(matrices[0].length),
           r2 = reorder.randomPermutation(matrices[0][0].length);
-      for(let i = 0; i<tables.length; i++){
+      for(let i = 0; i<t.length; i++){
         t[i].order(r1,r1);
       }
       computeQualities(t,str);
@@ -190,7 +193,7 @@ function max_mi_gx(t,str) {
           }
           res.push(nearest);
         }
-        for(let i = 0; i<tables.length; i++){
+        for(let i = 0; i<t.length; i++){
           t[i].order(res, res);
         }
         best_order = res;
@@ -271,7 +274,7 @@ function union_l2_leaf_order_permute(t,str,square) {
       
       var end = new Date().getTime();
     var time = end - start;
-    for(let i = 0; i<tables.length; i++){
+    for(let i = 0; i<t.length; i++){
         t[i].order(row_perm, row_perm);
       }
       return computeQualities(t,str,time);
@@ -334,7 +337,7 @@ function union_morans_leaf_order_permute(t,str,square){
       
       var end = new Date().getTime();
     var time = end - start;
-    for(let i = 0; i<tables.length; i++){
+    for(let i = 0; i<t.length; i++){
         t[i].order(row_perm, row_perm);
       }
       return computeQualities(t,str,time);
@@ -357,7 +360,7 @@ function gx_l2_leaf_order_permute(t,str) {
       row_perm = order.distanceMatrix(dist_rows)(matrices[timestep]),
       col_perm = order.distanceMatrix(dist_cols)(transpose);
 
-      for(let i = 0; i<tables.length; i++){
+      for(let i = 0; i<t.length; i++){
         t[i].order(row_perm, row_perm);
       }
       var end = new Date().getTime();
@@ -404,7 +407,7 @@ function gx_morans_leaf_order_permute(t,str) {
       var order = reorder.optimal_leaf_order();
       var row_perm = order.distanceMatrix(dist)(matrices[0]);
 
-      for(let i = 0; i<tables.length; i++){
+      for(let i = 0; i<t.length; i++){
         t[i].order(row_perm, row_perm);
       }
       var end = new Date().getTime();
@@ -415,6 +418,7 @@ function gx_morans_leaf_order_permute(t,str) {
 }
 
 function simultaneous_l2_leaf_order_permute(t,str,square) {
+    var matrices = t.map(x => x.matrix);
     var start = new Date().getTime();
     var transposed = [];
     for(let i = 0; i<matrices.length; i++){
@@ -427,10 +431,11 @@ function simultaneous_l2_leaf_order_permute(t,str,square) {
     
     var end = new Date().getTime();
     var time = end - start;
-    for(let i = 0; i<tables.length; i++){
+    for(let i = 0; i<t.length; i++){
       t[i].order(row_perm, row_perm);
     }
-    return computeQualities(t,str,time);
+    computeQualities(t,str,time);
+    return row_perm;
 }
 
 function simultaneous_morans_leaf_order_permute(t,str,square) {
@@ -482,10 +487,11 @@ function simultaneous_morans_leaf_order_permute(t,str,square) {
     
     var end = new Date().getTime();
     var time = end - start;
-    for(let i = 0; i<tables.length; i++){
+    for(let i = 0; i<t.length; i++){
       t[i].order(row_perm, row_perm);
     }
-    return computeQualities(t,str,time);
+    computeQualities(t,str,time);
+    return row_perm;
 }
 
 function gx_barycenter_permute(t,str) {
@@ -523,7 +529,7 @@ function gx_barycenter_permute(t,str) {
         var row_perm = improved[0],
             col_perm = improved[1];
 
-      for(let i = 0; i<tables.length; i++){
+      for(let i = 0; i<t.length; i++){
         t[i].order(row_perm, col_perm);
       }
       computeQualities(t,str);
@@ -575,7 +581,7 @@ function union_barycenter_permute(t,str) {
 
     var end = new Date().getTime();
     var time = end - start;
-    for(let i = 0; i<tables.length; i++){
+    for(let i = 0; i<t.length; i++){
       t[i].order(row_perm, col_perm);
     }
     return computeQualities(t,str,time);
@@ -631,6 +637,21 @@ function print_all(tables){
         }
     }
     console.log(output);
+}
+
+function stable_split_LO(t, str){
+    var halfway = Math.round(t.length/2);
+    var t_copy = [].concat(t);
+    const first_half = t_copy.splice(0,halfway);
+    const second_half = t_copy;
+    simultaneous_l2_leaf_order_permute(first_half,str,false);
+    simultaneous_l2_leaf_order_permute(second_half,str,false);
+    first_half[halfway-1].highlight_order(second_half[0]);
+}
+
+function highlight(t1, t2){
+    console.log(t1.row_perm);
+    console.log(t2.row_perm);
 }
 
       
