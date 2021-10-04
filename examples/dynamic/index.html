@@ -61,6 +61,7 @@ line {
         </div>
         <div style="margin-top:4px;margin-bottom: 4px">
         <button type="button" onclick="stable_split_LO(tables,'quality')">Stable Split</button>
+        <button type="button" onclick="stepwise_improvement(tables,'quality')">Stepwise Improvement</button>
         </div>
     </div>
     <div style='float:left;margin-right: 20px;overflow:auto;white-space:nowrap' id='heatmap'></div>
@@ -649,9 +650,52 @@ function stable_split_LO(t, str){
     first_half[halfway-1].highlight_order(second_half[0]);
 }
 
-function highlight(t1, t2){
-    console.log(t1.row_perm);
-    console.log(t2.row_perm);
+function stepwise_improvement(t,str){
+    // Leaf order on the first matrix
+    var transpose = reorder.transpose(matrices[0]);
+    var dist_rows = reorder.dist()(matrices[0]),
+    dist_cols = reorder.dist()(transpose),
+    order = reorder.optimal_leaf_order(),
+    row_perm = order.distanceMatrix(dist_rows)(matrices[0]),
+    col_perm = order.distanceMatrix(dist_cols)(transpose);
+    
+    t[0].order(row_perm, row_perm);
+    
+    for(let timestep = 1; timestep<t.length; timestep++){
+        // Compute n and m, used for distance between rows
+        var n = 0;
+        var m = 0;
+        for (var i = 0; i < matrices[timestep].length; i++) {
+            for (var j = 0; j < matrices[timestep][0].length; j++) {
+                n++;
+                if(matrices[timestep][i][j] === 1){
+                    m++;
+                }
+            }
+        }
+        // Compute smallest similarity between adjacent rows.
+        var distar = weighted_value_rows(matrices[timestep][0],matrices[timestep][matrices[timestep].length-1],n,m);
+        var minimum = n * n * n;
+        var min_index = -1;
+        for (var i = 0; i < matrices[timestep].length-1; i++) {
+            var di = weighted_value_rows(matrices[timestep][i],matrices[timestep][i+1],n,m);
+            if(di < minimum){
+                minimum = di;
+                min_index = i;
+            }
+        }
+        // If the smallest distance in smaller than distar, we swap blocks in row perm
+        if(minimum < distar){
+            var new_perm = row_perm.slice(min_index+1).concat(row_perm.slice(0,min_index+1));
+            row_perm = new_perm;
+            
+        }
+        t[timestep].order(row_perm, row_perm);
+        if(minimum < distar){
+            t[timestep-1].highlight_order(t[timestep]);
+        }
+    } 
+    
 }
 
       

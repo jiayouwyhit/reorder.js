@@ -32,8 +32,8 @@ class table{
 	this.col_perm = reorder.permutation(this.m);
     this.col_inv = reorder.inverse_permutation(this.col_perm);
 
-    this.left_colors = Array(this.row_perm.length).fill("red");
-    this.right_colors = Array(this.row_perm.length).fill("blue");
+    this.left_colors = Array(this.row_perm.length).fill("white");
+    this.right_colors = Array(this.row_perm.length).fill("white");
 
     var colorLow = 'white', colorHigh = 'black', colorGrid = 'grey';
     var max_value = d3.max(this.matrix.map(function(row) { return d3.max(row); })),
@@ -75,29 +75,30 @@ class table{
         .style("stroke", colorGrid);
 
     var row_labels = this.row_labels;
-//    row.append("text")
-//	.attr("x", -6)
-//	.attr("y", h / 2)
-//	.attr("dy", ".32em")
-//	.attr("text-anchor", "end")
-//	.text(function(d, i) { return row_labels[i]; });
+    
     var left_colors = this.left_colors;
     var right_colors = this.right_colors;
+    
     row.append("rect")
-        .attr("id","left")
-	.attr("x", -10)
+        .attr("class","left")
+	.attr("x", -15)
 	.attr("y", -.5)
-	.attr('width', 10)
+	.attr('width', 15)
         .attr('height', h+1)
         .attr('fill', function(d, i) { return left_colors[i]; });
     row.append("rect")
-            .attr("id","right")
+            .attr("class","right")
             .attr("x", w*row_labels.length)
             .attr("y", -.5)
             .attr('width', 10)
             .attr('height', h+1)
             .attr('fill', function(d, i) { return right_colors[i]; });
-    
+    row.append("text")
+	.attr("x", -6)
+	.attr("y", h / 2)
+	.attr("dy", ".32em")
+	.attr("text-anchor", "end")
+	.text(function(d, i) { return row_labels[i]; });
 
     var col = this.svg.selectAll(".col")
 	    .data(this.matrix[0])
@@ -230,19 +231,34 @@ class table{
             for (var right = 0; right < nexttable.row_perm.length; right++){
                 if(this.row_perm[left] === nexttable.row_perm[right]){
                     // If we are in a different block, change the color
-                    if(lastRight !== right+1){
+                    if(lastRight !== right-1){
                         colorIndex++;
                     }
                     this.right_colors[left] = colors[colorIndex];
-                    nexttable.left_colors[right] = colors[colorIndex];
+                    nexttable.left_colors[left] = colors[colorIndex];
                     
                     lastRight = right;
                     right = nexttable.row_perm.length;
                 }
             }
         }
+        var right_colors = this.right_colors;
+        var row_perm1 = this.row_perm;
+        var row_perm2 = nexttable.row_perm;
+        var t = this.svg;
+        t.selectAll(".row").select(".right")
+                .attr('fill', function(d, i) { return right_colors[i]; });
+        
+        var left_colors = nexttable.left_colors;
+        var t2 = nexttable.svg;
+        t2.selectAll(".row").select(".left")
+                .attr('fill', function(d, i) { return left_colors[i]; });
+        
+        
+        
         
     }
+    
     
     quality(){
         
