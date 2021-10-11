@@ -692,7 +692,7 @@ function stepwise_improvement(t,str){
         }
         t[timestep].order(row_perm, row_perm);
         if(minimum < distar){
-            t[timestep-1].highlight_order(t[timestep]);
+            t[timestep-1].highlight_order(t[timestep],timestep===1);
         }
     } 
     

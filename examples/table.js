@@ -10,8 +10,8 @@ class table{
         this.col_inv;
 	this.n = this.matrix.length;
 	this.m = this.matrix[0].length;
-        this.left_colors;
-        this.right_colors;
+        this.left_side_colors;
+        this.right_side_colors;
         
     if (! this.row_labels) {
 	this.row_labels = Array(this.n);
@@ -32,8 +32,8 @@ class table{
 	this.col_perm = reorder.permutation(this.m);
     this.col_inv = reorder.inverse_permutation(this.col_perm);
 
-    this.left_colors = Array(this.row_perm.length).fill("white");
-    this.right_colors = Array(this.row_perm.length).fill("white");
+    this.left_side_colors = Array(this.row_perm.length).fill("white");
+    this.right_side_colors = Array(this.row_perm.length).fill("white");
 
     var colorLow = 'white', colorHigh = 'black', colorGrid = 'grey';
     var max_value = d3.max(this.matrix.map(function(row) { return d3.max(row); })),
@@ -76,8 +76,8 @@ class table{
 
     var row_labels = this.row_labels;
     
-    var left_colors = this.left_colors;
-    var right_colors = this.right_colors;
+    var left_side_colors = this.left_side_colors;
+    var right_side_colors = this.right_side_colors;
     
     row.append("rect")
         .attr("class","left")
@@ -85,14 +85,14 @@ class table{
 	.attr("y", -.5)
 	.attr('width', 15)
         .attr('height', h+1)
-        .attr('fill', function(d, i) { return left_colors[i]; });
+        .attr('fill', function(d, i) { return left_side_colors[i]; });
     row.append("rect")
             .attr("class","right")
             .attr("x", w*row_labels.length)
             .attr("y", -.5)
             .attr('width', 10)
             .attr('height', h+1)
-            .attr('fill', function(d, i) { return right_colors[i]; });
+            .attr('fill', function(d, i) { return right_side_colors[i]; });
     row.append("text")
 	.attr("x", -6)
 	.attr("y", h / 2)
@@ -218,7 +218,7 @@ class table{
         return res;
     }
     
-    highlight_order(nexttable){
+    highlight_order(nexttable, debug){
         if(!nexttable){
             return
         }
@@ -234,25 +234,35 @@ class table{
                     if(lastRight !== right-1){
                         colorIndex++;
                     }
-                    this.right_colors[left] = colors[colorIndex];
-                    nexttable.left_colors[left] = colors[colorIndex];
+                    this.right_side_colors[left] = colors[colorIndex];
+                    nexttable.left_side_colors[right] = colors[colorIndex];
                     
                     lastRight = right;
                     right = nexttable.row_perm.length;
                 }
             }
         }
-        var right_colors = this.right_colors;
+        // right_side_colors = colors on the right of the first matrix
+        var right_side_colors = this.right_side_colors;
         var row_perm1 = this.row_perm;
         var row_perm2 = nexttable.row_perm;
+        var left_side_colors = nexttable.left_side_colors;
+        if(debug){
+            console.log("Colors:")
+            console.log(right_side_colors);
+            console.log(left_side_colors);
+            console.log("Perms:")
+            console.log(row_perm1);
+            console.log(row_perm2);
+        }
         var t = this.svg;
         t.selectAll(".row").select(".right")
-                .attr('fill', function(d, i) { return right_colors[i]; });
+                .attr('fill', function(d, i) { return right_side_colors[row_perm1.indexOf(i)]; });
         
-        var left_colors = nexttable.left_colors;
+        
         var t2 = nexttable.svg;
         t2.selectAll(".row").select(".left")
-                .attr('fill', function(d, i) { return left_colors[i]; });
+                .attr('fill', function(d, i) { return left_side_colors[row_perm2.indexOf(i)]; });
         
         
         
